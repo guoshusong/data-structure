@@ -32,3 +32,24 @@ void InThreading(BiThrTree p) {
 		InThreading(p->rchild);//递归右子树线索化
 	}
 }
+
+//线索二叉树的遍历
+Status InOrderTraverse(BiThrTree T) {
+	BiThrTree p;
+	p = T->lchild;//p指向根结点
+	while (p!=T)//空树或遍历结束，p==T
+	{
+		while (p->LTag == Link)//当LTag==0时，循环到中序序列的第一个结点
+		{
+			p = p->lchild;
+		}
+		printf("%c", p->data);
+		while (p->RTag == Thread && p->rchild != T)
+		{
+			p = p->rchild;
+			printf("%c", p->data);
+		}
+		p = p->rchild;
+	}
+	return 1;
+}
