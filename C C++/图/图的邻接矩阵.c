@@ -55,3 +55,51 @@ void DFS(MGraph G, int i) {
 		}
 	}
 }
+
+//邻接矩阵的深度优先遍历
+void DFSTraverse(MGraph G){
+	int i;
+	for ( i = 0; i < G.numVertexes; i++)
+	{
+		visited[i] = false;//初始所有顶点状态都是未访问过的状态
+	}
+	for ( i = 0; i < G.numVertexes; i++)
+	{
+		if (!visited[i])//对未访问过的结点，调用DFS。若是连通图，则只会执行一次
+		{
+			DFS(G, i);
+		}
+	}
+}
+
+//邻接矩阵的广度遍历算法
+void BFSTraverse(MGraph G) {
+	int i, j;
+	Queue Q;
+	for ( i = 0; i < G.numVertexes; i++)
+	{
+		visited[i] = false;
+	}
+	InitQueue(&Q);//初始化以辅助用的队列
+	for ( i = 0; i < G.numVertexes; i++)
+	{
+		if (!visited[i]) {
+			visited[i] = true;
+			printf("%c", G.vexs[i]);
+			EnQueue(&Q, i);//将此顶点入列
+			while (!QueueEmpty(Q))
+			{
+				DeQueue(&Q, &i);//将队中元素出列，赋值给i
+				for ( j = 0; j < G.numVertexes; j++)
+				{
+					if (G.arc[i][j] == 1 && !visited[i])//判断其他顶点与当前顶点存在边，且未访问过
+					{
+						visited[i] = true;
+						printf("%c", G.vexs[j]);
+						EnQueue(&Q, j);
+					}
+				}
+			}
+		}
+	}
+}
