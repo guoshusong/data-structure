@@ -16,6 +16,12 @@ typedef struct {
 	int numVertexes, numEdges;//图中当前的顶点数和边数
 }MGraph;
 
+typedef struct {
+	int begin;
+	int end;
+	int weight;
+}Edge;
+
 //图的构造
 void CreateGraph(MGraph *G) {
 	int i, j, k, w;
@@ -102,4 +108,76 @@ void BFSTraverse(MGraph G) {
 			}
 		}
 	}
+}
+
+//普利姆算法Prim
+void MiniSpanTree_Prim(MGraph G) {
+	int min, i, j, k;
+	int adjvex[MAXVEX];//保存相关顶点下标
+	int lowcost[MAXVEX];//保存相关顶点间边的权值
+	lowcost[0] = 0;//初始化第一个权值为0，即V0加入生成树，lowcost的值为0，在这里就是此下标的顶点已经加入生成树
+	adjvex[0] = 0;
+	for ( i = 0; i < G.numVertexes; i++)
+	{
+		lowcost[i] = G.arc[0][i];//将V0顶点与之有边的权值存入数组
+		adjvex[i] = 0;//初始化都为V0的下标
+	}
+	for (i = 0; i < G.numVertexes; i++) {
+		min = INFINITY;//初始化最小权值为∞
+		k = 0;
+		j = 1;
+		while (j<G.numVertexes)//循环全部顶点
+		{
+			if (lowcost[j]!=0 && lowcost[j]<min)
+			{//如果权值不为0，且权值小于min
+				min = lowcost[j];//让当前权值称为最小值
+				k = j;//将当前最小值的下标存入k
+			}
+			j++;
+		}
+	}
+	printf("(%d,%d)", adjvex[k], k);//打印当前顶点边中权值最小边
+	lowcost[k] = 0;//将当前顶点的权值设置为0，表示此顶点已经完成任务
+	for ( j = 1; j < G.numVertexes; j++)
+	{
+		if (lowcost[j]!=0 && G.arc[k][j] < lowcost[j])
+		{//若下标为k顶点各边权值小于此前这些顶点未被接入生成树权值
+			lowcost[j] = G.arc[k][j];
+			adjvex[j] = k;
+		}
+	}
+
+}
+
+//卡鲁斯卡尔算法
+void MiniSpanTree_Kruskal(MGraph G) {
+	int i, n, m;
+	Edge edges[10];
+	int parent[MAXVEX];//定义一数组用来判断边与边是否形成环路
+	/*
+	此处省略将邻接矩阵G转化为边集数组edges并按权由小到大排序的代码
+	*/
+	for ( i = 0; i < G.numVertexes; i++)
+	{
+		parent[i] = 0;
+	}
+	for ( i = 0; i < G.numEdges; i++)
+	{
+		n = Find(parent, edges[i].begin);
+		m = Find(parent, edges[i].end);
+		if (n!=m)//说明此边没有与现有生成树形成环路
+		{
+			parent[n] = m;//表示此顶点已经在生成树集合中
+			printf("(%d,%d) %d", edges[i].begin, edges[i].end, edges[i].weight);
+		}
+	}
+}
+
+//查找连线顶点的尾部下标
+int Find(int* parent, int f) {
+	while (parent[f] > 0)
+	{
+		f = parent[f];
+	}
+	return f;
 }
