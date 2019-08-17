@@ -15,9 +15,9 @@ typedef struct {
 typedef int Pathmatirx[MAXVEX];//用于存储最短路径下标的数组
 typedef int ShortPathTable[MAXVEX];//用于存储到各点最短路径的权值之和
 
-//(Dijkstra)算法,求有向图G的顶点V0到其余顶点V的最短路径P[v]及带权长度D[v]
+//(Dijkstra)算法,求无向图G的顶点V0到其余顶点V的最短路径P[v]及带权长度D[v]
 //P[v]的值为前驱顶点下标，D[v]表示v0到v的最短路径的长度
-void ShorttestPath_Dijkstra(MGraph G, int v0, Pathmatirx* p, ShortPathTable* d) {
+void ShortPath_Dijkstra(MGraph G, int v0, Pathmatirx* p, ShortPathTable* d) {
 	int v, w, k, min;
 	int final[MAXVEX];//final[w]=1表示求得顶点Vo至Vw的最短路径
 	for (  v = 0; v <G.numVertexes; v++)
@@ -50,5 +50,54 @@ void ShorttestPath_Dijkstra(MGraph G, int v0, Pathmatirx* p, ShortPathTable* d) 
 			(*d)[w] = min + G.arc[k][w];
 			(*p)[w] = k;
 		}
+	}
+}
+
+typedef int Path[MAXVEX][MAXVEX];
+typedef int Table[MAXVEX][MAXVEX];
+//弗洛伊德算法(Floyd),求网图G的顶点v到其余顶点w的最短路径P[v][w]及带权长度D[v][w]
+void ShortPathFloyd(MGraph G, Path* p, Table* D) {
+	int v, w, k;
+	for ( v = 0; v < G.numVertexes; ++v)//初始化D与P
+	{
+		for ( w = 0; w < G.numVertexes; ++w)
+		{
+			(*D)[v][w] = G.arc[v][w];
+			(*P)[v][w] = w;
+		}
+	}
+
+	for ( k = 0; k < G.numVertexes; ++k)
+	{
+		for ( v = 0; v < G.numVertexes; ++v)
+		{
+			for ( w = 0; w < G.numVertexes; ++w)
+			{
+				if ((*D)[v][w] > (*D)[v][k] + (*D)[k][w]) {
+					//如果经过下标为k顶点路径比原两点之间的路径更短
+					//将当前两点间权值设为更小的一个
+					(*D)[v][w] = (*D)[v][k] + (*D)[k][w];
+					(*p)[v][w] = (*p)[v][k];
+				}
+			}
+
+		}
+	}
+	//求最短路径的显示代码
+	for ( v = 0; v < G.numVertexes; ++v)
+	{
+		for (w = v + 1; w < G.numVertexes; w++)
+		{
+			printf("v%d-v%d weight %d", v, w, D[v][w]);
+			k = p[v][w];//获取第一个路径顶点下标
+			printf("parh: %d", v);
+			while (k != w)//如果路径下标不是终点
+			{
+				printf("-> %d", k);//打印路径顶点
+				k = p[k][w];
+			}
+			prinf("-> %d \n", w);
+		}
+		printf("/n");
 	}
 }
