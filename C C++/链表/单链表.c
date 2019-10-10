@@ -45,7 +45,7 @@ Status ListInsert(LinkList* L, int i, ElemType e) {
 	{
 		return ERROR;
 	}
-	s = (LinkList)malloce(sizeof(Node) );//生成新结点(C标准函数)
+	s = (LinkList)malloc(sizeof(Node) );//生成新结点(C标准函数)
 
 	s->data = e;
 	s->next = p->next;
