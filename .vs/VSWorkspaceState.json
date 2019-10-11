@@ -2,11 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\C C++",
-    "\\C C++\\图",
-    "\\C C++\\排序算法",
-    "\\C C++\\数据结构实验",
-    "\\C C++\\栈和队列"
+    "\\C C++\\串",
+    "\\C C++\\图"
   ],
-  "SelectedNode": "\\C C++\\栈和队列\\字符串解码.c",
+  "SelectedNode": "\\C C++\\串\\串的模式匹配.c",
   "PreviewInSolutionExplorer": false
 }

@@ -1,56 +1,42 @@
-//用于计算字符串t的next数组
-void get_next(String t, int* next) {
-	int i, j;
-	i = 1;
-	j = 0 ;
+#include <stdio.h>
+#include <string.h>
+void Next(char* T, int* next) {
+	int i = 1;
 	next[1] = 0;
-	while (i < t[0])//此处t[0]表示t的长度
-	{
-		if(j == 0 || t[i] == t[j])//t[i]表示后缀的单个字符串,t[j]表示前缀的单个字符串
-		{
-			++i;
-			++j;
-			if (t[i] != t[j])//若当前字符串与前缀字符不相同
-			{
-				next[i] = j;//则当前的j为next在i的位置
-			}
-			else {
-				next[i] = next[j];//如果与前缀字符串相同，则将前缀字符串的next值赋值给next在i的位置
-
+	int j = 0;
+	while (i < strlen(T)) {
+		if (j == 0 || T[i - 1] == T[j - 1]) {
+			i++;
+			j++;
+			next[i] = j;
 		}
-		else
-		{
-			j = next[j];//若字符串不相同，则j回溯
+		else {
+			j = next[j];
 		}
-
 	}
 }
-
-//返回子串t在主串s中第pos个字符之后的位置。
-//此处t[0]表示t的长度,s[0]表示s的长度
-int index_KMP(String s,String t,int pos) {
-	int i = pos;//i用于主串s当前位置的下标，若pos不为1，则从pos位置来时匹配
-	int j = 1;//用于子串t中当前位置下标
-	int next[255];
-	get_next(t, next);//得到字符串t的next数组
-	while (i <= s[0] && j <= t[0])
-	{
-		if (j == 0 || s[i]==t[j])//两字母相等则继续，与朴素算法增加了j=0判断
-		{
-			++i;
-			++j;
+int KMP(char* S, char* T) {
+	int next[10];
+	Next(T, next);//根据模式串T,初始化next数组
+	int i = 1;
+	int j = 1;
+	while (i <= strlen(S) && j <= strlen(T)) {
+		//j==0:代表模式串的第一个字符就和当前测试的字符不相等；S[i-1]==T[j-1],如果对应位置字符相等，两种情况下，指向当前测试的两个指针下标i和j都向后移
+		if (j == 0 || S[i - 1] == T[j - 1]) {
+			i++;
+			j++;
 		}
-		else // 指针后退重新开始匹配
-		{
-			j = next[j];//j返回合适位置，i值不变
+		else {
+			j = next[j];//如果测试的两个字符不相等，i不动，j变为当前测试字符串的next值
 		}
 	}
-	if (j > t[0])
-	{
-		return i - t[0];
+	if (j > strlen(T)) {//如果条件为真，说明匹配成功
+		return i - (int)strlen(T);
 	}
-	else
-	{
-		return[0];
-	}
+	return -1;
+}
+int main() {
+	int i = KMP("ababcabcacbab", "abcac");
+	printf("%d", i);
+	return 0;
 }
