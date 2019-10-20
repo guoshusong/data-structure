@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node
+{
+	int Data;
+	struct node* left;
+	struct node* right;
+}BinTree;
+
+BinTree* Build(int n, int* mid, int* last);
+void First(BinTree* rt);
+
+int main()
+{
+	int mid[44], last[44];
+	int n, i;
+	BinTree* rt = NULL;
+	scanf("%d", &n);
+	for (i = 0; i < n; i++)//后序遍历
+		scanf("%d", &last[i]);
+	for (i = 0; i < n; i++)//中序遍历
+		scanf("%d", &mid[i]);
+	
+	rt = Build(n, mid, last);
+	printf("Preorder:");
+	First(rt);
+	printf("\n");
+	return 0;
+}
+
+
+//前序遍历输出树
+void First(BinTree* rt)
+{
+	if (rt)
+	{
+		printf(" %d", rt->Data);
+		First(rt->left);
+		First(rt->right);
+	}
+}
+
+//根据前序遍历结果和中序遍历结果构建二叉树
+BinTree* Build(int n, int* mid, int* last)
+{
+	BinTree* rt;
+	int i;
+	if (n <= 0)
+		return NULL;
+
+	
+	rt = (BinTree*)malloc(sizeof(BinTree));
+	//rt为根结点，等于后序遍历的最后一个数
+	rt->Data = last[n - 1];
+	
+	rt->left = rt->right = NULL;
+	for (i = 0; i < n; i++)
+	{
+		if (mid[i] == rt->Data)
+			break;
+	}
+	rt->left = Build(i, mid, last);
+	rt->right = Build(n - i - 1, mid + i + 1, last + i);
+	return rt;
+}
